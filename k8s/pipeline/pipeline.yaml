@@ -53,7 +53,8 @@ spec:
     #         - test
     - name: build-image
       runAfter:
-        - run-tests
+        # - run-tests
+        - clone-repository
       taskRef:
         kind: Task
         name: buildah
@@ -65,8 +66,7 @@ spec:
           value: "$(params.image-repo):$(tasks.clone-repository.results.commit)"
     - name: kustomize-build
       runAfter:
-        # - build-image
-        - clone-repository
+        - build-image
       taskRef:
         kind: Task
         name: kustomize-build
