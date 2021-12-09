@@ -6,7 +6,6 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import Style from "./Header.module.css";
 
 const useStyles = makeStyles({
   header: {
