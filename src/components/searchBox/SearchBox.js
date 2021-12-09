@@ -41,6 +41,8 @@ const SearchBox = (props) => {
   const onClickSearch = useCallback(
     async (event) => {
       event.preventDefault();
+
+      props.onStart();
       const res = await queryDiscovery(sendText, type, 5);
 
       let allSuggestions = [];
@@ -50,7 +52,7 @@ const SearchBox = (props) => {
       }
       setSuggestions([...allSuggestions]);
 
-      props.onSearch(res.data);
+      props.onComplete(res.data);
     },
     [sendText, type, setSuggestions]
   );

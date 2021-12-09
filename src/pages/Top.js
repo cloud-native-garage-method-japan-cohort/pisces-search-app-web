@@ -1,28 +1,29 @@
-import React, { useState } from "react";
-import { Box } from "@material-ui/core";
+import React, { useCallback, useState } from "react";
+import { Box, CircularProgress } from "@material-ui/core";
 import Layout from "../components/layout/Layout";
 import SearchBox from "../components/searchBox/SearchBox";
 import SearchResults from "../components/searchResults/SearchResults";
 
 const Top = () => {
   const [results, setResults] = useState([]);
+  const [inSearching, setInSearching] = useState(false);
 
-  const onSearch = async (results) => {
-    console.log("results:");
-    console.log(results);
+  const onSearchStart = useCallback(() => {
+    setInSearching(true);
+  }, [setInSearching]);
+  const onSearchComplete = useCallback((results) => {
     setResults([...results]);
-  };
+    setInSearching(false);
+  }, [setResults, setInSearching]);
 
   return (
     <Layout>
       <Box paddingBottom={5}>
-        <SearchBox onSearch={onSearch} />
+        <SearchBox onStart={onSearchStart} onComplete={onSearchComplete} />
       </Box>
-      {!results ? <Loading /> : <SearchResults results={results} />}
+      {inSearching ? <CircularProgress /> : <SearchResults results={results} />}
     </Layout>
   );
 };
-
-const Loading = () => <div>loading</div>;
 
 export default Top;
