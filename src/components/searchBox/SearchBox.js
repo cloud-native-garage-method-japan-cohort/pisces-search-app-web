@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { queryDiscovery } from "../../utils/index";
+import { SentimentDissatisfied } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,45 +42,35 @@ const SearchBox = (props) => {
   const [type, setType] = useState(1);
   const [suggestions, setSuggestions] = useState([]);
 
-  const onClickSearch = useCallback(
-    async (event) => {
-      event.preventDefault();
+  const doSearch = useCallback(async () => {
+    props.onStart();
+    const res = await queryDiscovery(sendText, type, 5);
 
-      props.onStart();
-      const res = await queryDiscovery(sendText, type, 5);
-
-      let allSuggestions = new Set();
-      for (let data of res.data) {
-        const concepts = data.concepts || [];
-        for (let concept of concepts) {
-          allSuggestions.add(concept.text)
-        }
+    let allSuggestions = new Set();
+    for (let data of res.data) {
+      const concepts = data.concepts || [];
+      for (let concept of concepts) {
+        allSuggestions.add(concept.text)
       }
-      setSuggestions([...Array.from(allSuggestions)]);
+    }
+    setSuggestions([...Array.from(allSuggestions)]);
 
-      props.onComplete(res.data);
-    },
-    [sendText, type, setSuggestions]
-  );
-  const onSubmitForm = useCallback(
-    (event) => {
-      onClickSearch(event);
-    },
-    [onClickSearch]
-  );
-  const onChangeType = useCallback(
-    (event, newType) => {
-      setType(newType);
-      props.onComplete([]);
-    },
-    [setType]
-  );
-  const onChangeSearchText = useCallback(
-    (event) => {
-      setSendText(event.target.value);
-    },
-    [setSendText]
-  );
+    props.onComplete(res.data);
+  }, [sendText, type, setSuggestions]);
+  const onClickSearch = useCallback(async (event) => {
+    event.preventDefault();
+    await doSearch();
+  }, [doSearch]);
+  const onSubmitForm = useCallback((event) => {
+    onClickSearch(event);
+  },[onClickSearch]);
+  const onChangeType = useCallback(async (event, newType) => {
+    setType(newType);
+    await doSearch();
+  },[setType, doSearch]);
+  const onChangeSearchText = useCallback((event) => {
+    setSendText(event.target.value);
+  }, [setSendText]);
   const onClickSuggestion = useCallback((event) => {
     const newSendText = sendText + event.currentTarget.dataset.suggestion
     setSendText(newSendText);
