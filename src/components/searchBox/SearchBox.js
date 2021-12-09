@@ -72,7 +72,10 @@ const SearchBox = (props) => {
     setSendText(event.target.value);
   }, [setSendText]);
   const onClickSuggestion = useCallback((event) => {
-    const newSendText = sendText + event.currentTarget.dataset.suggestion
+    const searchWords = sendText.split(" ");
+    searchWords.push(event.currentTarget.dataset.suggestion);
+
+    const newSendText = searchWords.join(" ");
     setSendText(newSendText);
 
     const suggestionsSet = new Set(suggestions);
