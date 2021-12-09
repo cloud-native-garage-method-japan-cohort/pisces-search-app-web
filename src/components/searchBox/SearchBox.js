@@ -74,7 +74,11 @@ const SearchBox = (props) => {
   const onClickSuggestion = useCallback((event) => {
     const newSendText = sendText + event.currentTarget.dataset.suggestion
     setSendText(newSendText);
-  }, [sendText, setSendText]);
+
+    const suggestionsSet = new Set(suggestions);
+    suggestionsSet.delete(event.currentTarget.dataset.suggestion);
+    setSuggestions([...Array.from(suggestionsSet)]);
+  }, [sendText, setSendText, suggestions, setSuggestions]);
 
   const classes = useStyles();
 
