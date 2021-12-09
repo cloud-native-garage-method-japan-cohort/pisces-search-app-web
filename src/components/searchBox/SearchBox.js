@@ -2,10 +2,11 @@ import React, { useCallback, useState } from "react";
 import {
   Box,
   Chip,
+  Grid,
   IconButton,
-  MenuItem,
   Paper,
-  Select,
+  Tab,
+  Tabs,
   TextField,
   makeStyles,
 } from "@material-ui/core";
@@ -14,6 +15,7 @@ import { queryDiscovery } from "../../utils/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    margin: "auto",
     marginTop: "40px",
     padding: "2px 4px",
     display: "flex",
@@ -22,14 +24,15 @@ const useStyles = makeStyles((theme) => ({
     width: 600,
   },
   input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
+    width: 600,
   },
   iconButton: {
     padding: 10,
   },
   suggestions: {
     paddingTop: 10,
+    margin: "auto",
+    width: "80%",
   },
 }));
 
@@ -45,12 +48,14 @@ const SearchBox = (props) => {
       props.onStart();
       const res = await queryDiscovery(sendText, type, 5);
 
-      let allSuggestions = [];
+      let allSuggestions = new Set();
       for (let data of res.data) {
         const concepts = data.concepts || [];
-        allSuggestions = allSuggestions.concat(concepts.map((concept) => concept.text));
+        for (let concept of concepts) {
+          allSuggestions.add(concept.text)
+        }
       }
-      setSuggestions([...allSuggestions]);
+      setSuggestions([...Array.from(allSuggestions)]);
 
       props.onComplete(res.data);
     },
@@ -62,9 +67,10 @@ const SearchBox = (props) => {
     },
     [onClickSearch]
   );
-  const onChangeTypeSelect = useCallback(
-    (event) => {
-      setType(event.target.value);
+  const onChangeType = useCallback(
+    (event, newType) => {
+      setType(newType);
+      props.onComplete([]);
     },
     [setType]
   );
@@ -83,54 +89,51 @@ const SearchBox = (props) => {
 
   return (
     <React.Fragment>
-      <form onSubmit={onSubmitForm}>
-        <Paper className={classes.root}>
-          <TextField
-            value={sendText}
-            placeholder="Watson Discovery で検索"
-            InputProps={{
-              disableUnderline: true,
-              startAdornment: (
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={type}
-                  onChange={onChangeTypeSelect}
-                  disableUnderline
-                >
-                  <MenuItem value={1}>事例</MenuItem>
-                  <MenuItem value={2}>ソリューション</MenuItem>
-                </Select>
-              ),
-              endAdornment: (
-                <IconButton
-                  type="button"
-                  className={classes.iconButton}
-                  aria-label="search"
-                  onClick={onClickSearch}
-                >
-                  <SearchIcon />
-                </IconButton>
-              ),
-            }}
-            onChange={onChangeSearchText}
-            fullWidth
-          />
-        </Paper>
+      <form className={classes.root} onSubmit={onSubmitForm}>
+        <Grid contaiener>
+          <Grid item={12}>
+            <Tabs indicatorColor="primary" textColor="primary" value={type} onChange={onChangeType}>
+              <Tab label="事例" value={1} />
+              <Tab label="ソリューション" value={2} />
+            </Tabs>
+          </Grid>
+          <Grid item={12}>
+            <Paper >
+              <TextField
+                className={classes.input}
+                variant="outlined"
+                value={sendText}
+                placeholder="Watson Discovery で検索"
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      type="button"
+                      className={classes.iconButton}
+                      aria-label="search"
+                      onClick={onClickSearch}
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  ),
+                }}
+                onChange={onChangeSearchText}
+                fullWidth
+              />
+            </Paper>
+          </Grid>
+        </Grid>
       </form>
       <div className={classes.suggestions}>
-        <span>関連ワード</span>
-        <Box>
-          {suggestions.map((suggestion) => (
-            <Chip 
-              size="small"
-              label={suggestion}
-              data-suggestion={suggestion}
-              onClick={onClickSuggestion}
-              clickable
-            />
-          ))}
-        </Box>
+        <span>関連ワード</span><br />
+        {suggestions.map((suggestion) => (
+          <Chip 
+            size="small"
+            label={suggestion}
+            data-suggestion={suggestion}
+            onClick={onClickSuggestion}
+            clickable
+          />
+        ))}
       </div>
     </React.Fragment>
   );
