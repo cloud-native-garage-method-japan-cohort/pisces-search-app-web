@@ -1,6 +1,7 @@
+import React, { useCallback } from "react";
 import Truncate from "react-truncate";
-import { Paper, Grid, makeStyles, Chip } from "@material-ui/core";
-import React from "react";
+import { Paper, Grid, makeStyles } from "@material-ui/core";
+
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -10,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     textAlign: "left",
     padding: "10px",
+    cursor: "pointer",
   },
   paperBorder: {
     border: `3px solid #5898a7`,
@@ -31,6 +33,7 @@ const SearchResults = (props) => {
           <Paper
             className={[classes.paper, classes.paperBorder].join(" ")}
             elevation={5}
+            onClick={() => props.onClickResult(props.results[0])}
           >
             <Truncate line={10} width={2400}>
               {props.results[0].text}
@@ -42,7 +45,7 @@ const SearchResults = (props) => {
         {props.results.slice(1).map((result, i) => (
           <Grid item xs>
             <div style={{ textAlign: "left" }}>{i + 2}番目におすすめ</div>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper} onClick={() => props.onClickResult(result)}>
               <Truncate line={5} width={1000}>
                 {result.text}
               </Truncate>
