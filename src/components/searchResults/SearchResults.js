@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchResults = (props) => {
   const classes = useStyles();
-  //   console.log(props.results[0].concepts[0].name);
+
   if (props.results.length < 1) {
     return <div>no results</div>;
   }
@@ -47,9 +47,6 @@ const SearchResults = (props) => {
                 {result.text}
               </Truncate>
             </Paper>
-            {result.concepts?.map((rc) => (
-              <Chip size="small" label={rc.name} />
-            ))}
           </Grid>
         ))}
       </Grid>

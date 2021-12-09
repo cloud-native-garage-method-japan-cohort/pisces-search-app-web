@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import {
+  Box,
   Chip,
   IconButton,
   MenuItem,
@@ -13,12 +14,12 @@ import { queryDiscovery } from "../../utils/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: "60px",
+    marginTop: "40px",
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: 400,
+    width: 600,
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -35,21 +36,19 @@ const useStyles = makeStyles((theme) => ({
 const SearchBox = (props) => {
   const [sendText, setSendText] = useState("");
   const [type, setType] = useState(1);
-  const [suggestions, setSuggestions] = useState(["sample"]);
+  const [suggestions, setSuggestions] = useState([]);
 
   const onClickSearch = useCallback(
     async (event) => {
       event.preventDefault();
       const res = await queryDiscovery(sendText, type, 5);
 
-      /*
-      const allSuggestions = [];
-      for (let data in res.data) {
+      let allSuggestions = [];
+      for (let data of res.data) {
         const concepts = data.concepts || [];
-        allSuggestions.concat(concepts.map((concept) => concept.name));
+        allSuggestions = allSuggestions.concat(concepts.map((concept) => concept.text));
       }
       setSuggestions([...allSuggestions]);
-      */
 
       props.onSearch(res.data);
     },
@@ -73,6 +72,10 @@ const SearchBox = (props) => {
     },
     [setSendText]
   );
+  const onClickSuggestion = useCallback((event) => {
+    const newSendText = sendText + event.currentTarget.dataset.suggestion
+    setSendText(newSendText);
+  }, [sendText, setSendText]);
 
   const classes = useStyles();
 
@@ -81,6 +84,7 @@ const SearchBox = (props) => {
       <form onSubmit={onSubmitForm}>
         <Paper className={classes.root}>
           <TextField
+            value={sendText}
             placeholder="Watson Discovery で検索"
             InputProps={{
               disableUnderline: true,
@@ -113,9 +117,18 @@ const SearchBox = (props) => {
         </Paper>
       </form>
       <div className={classes.suggestions}>
-        {suggestions.map((suggest) => (
-          <Chip size="small" label={suggest} />
-        ))}
+        <span>関連ワード</span>
+        <Box>
+          {suggestions.map((suggestion) => (
+            <Chip 
+              size="small"
+              label={suggestion}
+              data-suggestion={suggestion}
+              onClick={onClickSuggestion}
+              clickable
+            />
+          ))}
+        </Box>
       </div>
     </React.Fragment>
   );
