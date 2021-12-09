@@ -18,11 +18,18 @@ export const queryDiscovery = async (searchText, type, itemNum = 5) => {
     };
   }
 
-  const body = {
+  const response = await api.post("", {
     text: searchText,
     type: type,
     item_num: itemNum,
+  });
+
+  let queryResults = [];
+  if (response.data.data instanceof Array) {
+    queryResults = response.data.data;
+  }
+
+  return {
+    data: queryResults
   };
-  const response = await api.post("", body);
-  return response.data;
 };
