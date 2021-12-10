@@ -27,6 +27,7 @@ const useStyles = makeStyles({
     marginTop: 5,
     fontSize: 15,
     letterSpacing: 3,
+    wordWrap: "break-word",
   },
   tableHeader: {
     fontWeight: "bold",
