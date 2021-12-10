@@ -2,6 +2,7 @@ import React from "react";
 import {
   Button,
   Box,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -27,6 +28,9 @@ const useStyles = makeStyles({
     letterSpacing: 3,
   },
   tableHeader: {
+    fontWeight: "bold",
+  },
+  resultSolutionsTitle: {
     fontWeight: "bold",
   },
 });
@@ -64,6 +68,12 @@ const SearchResultDetail = (props) => {
             ))}
           </TableBody>
         </Table>
+        <Box paddingTop="20px">
+          <Typography className={classes.resultSolutionsTitle} variant="subtitle2">
+            関連ソリューション: {(props.result.solutions || []).length}件
+          </Typography>
+          {props.result.solutions.map(solution => <Chip label={solution} size="small" />)}
+        </Box>
       </DialogContent>
     </React.Fragment>
   ) : null;
