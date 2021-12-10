@@ -33,3 +33,13 @@ export const queryDiscovery = async (searchText, type, itemNum = 5) => {
     data: queryResults
   };
 };
+
+export const uploadToDiscovery = async (fileType, fileName, contents) => {
+  const response = await api.post("/upload", {
+    type: fileType,
+    name: fileName,
+    contents: contents,
+  });
+  console.log(response);
+  return response.data;
+};
