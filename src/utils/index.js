@@ -18,7 +18,7 @@ export const queryDiscovery = async (searchText, type, itemNum = 5) => {
     };
   }
 
-  const response = await api.post("", {
+  const response = await api.post("/search", {
     text: searchText,
     type: type,
     item_num: itemNum,
