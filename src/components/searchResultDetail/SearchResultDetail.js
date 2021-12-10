@@ -12,15 +12,22 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
   makeStyles,
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
+  resultCaseName: {
+    fontWeight: "bold",
+  },
   resultText: {
     padding: 10,
     marginTop: 5,
     fontSize: 15,
     letterSpacing: 3,
+  },
+  tableHeader: {
+    fontWeight: "bold",
   },
 });
 
@@ -28,32 +35,37 @@ const SearchResultDetail = (props) => {
   const classes = useStyles();
 
   const content = props.result ? (
-    <DialogContent>
-      <Box display="flex">
-        <Box marginLeft="auto">
-          <span>関連度: {props.result.score}</span>
+    <React.Fragment>
+      <DialogTitle>
+        <Typography className={classes.resultCaseName}>{props.result.caseName}</Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Box display="flex">
+          <Box marginLeft="auto">
+            <Typography variant="subtitle2">関連度: {props.result.score}</Typography>
+          </Box>
         </Box>
-      </Box>
-      <Paper className={classes.resultText} variant="outlined">
-        {props.result.text}
-      </Paper>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>関連キーワード</TableCell>
-            <TableCell>関連度</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.result.concepts.map(concept => (
+        <Paper className={classes.resultText} variant="outlined">
+          {props.result.text}
+        </Paper>
+        <Table>
+          <TableHead>
             <TableRow>
-              <TableCell>{concept.text}</TableCell>
-              <TableCell>{concept.relevance}</TableCell>
+              <TableCell className={classes.tableHeader}>関連キーワード</TableCell>
+              <TableCell className={classes.tableHeader}>関連度</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </DialogContent>
+          </TableHead>
+          <TableBody>
+            {props.result.concepts.map(concept => (
+              <TableRow>
+                <TableCell>{concept.text}</TableCell>
+                <TableCell>{concept.relevance}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </DialogContent>
+    </React.Fragment>
   ) : null;
 
   return (
@@ -63,7 +75,6 @@ const SearchResultDetail = (props) => {
       maxWidth="sm"
       fullWidth
     >
-      <DialogTitle>検索結果詳細</DialogTitle>
       {content}
       <DialogActions>
         <Button variant="outlined" onClick={props.onClose}>CLOSE</Button>

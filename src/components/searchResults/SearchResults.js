@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import Truncate from "react-truncate";
-import { Paper, Grid, makeStyles } from "@material-ui/core";
+import { Paper, Grid, Typography, makeStyles } from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -15,6 +15,13 @@ const useStyles = makeStyles((theme) => ({
   },
   paperBorder: {
     border: `3px solid #5898a7`,
+  },
+  resultCaseName: {
+    fontWeight: "bold",
+    paddingBottom: "3px",
+  },
+  resultText: {
+    color: "grey",
   },
 }));
 
@@ -35,20 +42,26 @@ const SearchResults = (props) => {
             elevation={5}
             onClick={() => props.onClickResult(props.results[0])}
           >
-            <Truncate line={10} width={2400}>
-              {props.results[0].text}
-            </Truncate>
+            <Typography className={classes.resultCaseName}>{props.results[0].caseName}</Typography>
+            <Typography className={classes.resultText} variant="subtitle2">
+              <Truncate line={10} width={2400}>
+                {props.results[0].text}
+              </Truncate>
+            </Typography>
           </Paper>
         </Grid>
       </Grid>
       <Grid className={classes.grid} container spacing={2}>
         {props.results.slice(1).map((result, i) => (
-          <Grid item xs>
+          <Grid item xs={3}>
             <div style={{ textAlign: "left" }}>{i + 2}番目におすすめ</div>
             <Paper className={classes.paper} onClick={() => props.onClickResult(result)}>
-              <Truncate line={5} width={1000}>
-                {result.text}
-              </Truncate>
+              <Typography className={classes.resultCaseName}>{result.caseName}</Typography>
+              <Typography className={classes.resultText} variant="subtitle2">
+                <Truncate line={5} width={1000}>
+                  {result.text}
+                </Truncate>
+              </Typography>
             </Paper>
           </Grid>
         ))}
