@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
     padding: "10px",
     cursor: "pointer",
+    wordWrap: "break-word",
   },
   paperBorder: {
     border: `3px solid #5898a7`,
