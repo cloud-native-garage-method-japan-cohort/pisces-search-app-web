@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchBox = (props) => {
   const [sendText, setSendText] = useState("");
-  const [type, setType] = useState(1);
+  const [type, setType] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
 
   const doSearch = useCallback(async () => {
@@ -91,8 +91,8 @@ const SearchBox = (props) => {
         <Grid contaiener>
           <Grid item={12}>
             <Tabs indicatorColor="primary" textColor="primary" value={type} onChange={onChangeType}>
-              <Tab label="事例" value={1} />
-              <Tab label="ソリューション" value={2} />
+              <Tab label="事例" value={0} />
+              <Tab label="ソリューション" value={1} />
             </Tabs>
           </Grid>
           <Grid item={12}>
