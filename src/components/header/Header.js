@@ -5,9 +5,13 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
+  logo: {
+    height: "23px",
+    paddingBottom: "3px",
+    paddingRight: "15px",
+  },
   header: {
     backgroundColor: "#333333",
   },
@@ -22,6 +26,7 @@ const Header = () => {
   return (
     <AppBar className={classes.header} position="static">
       <Toolbar>
+        <img className={classes.logo} src={process.env.PUBLIC_URL + "/ibm-logo.png"} />
         <Typography className={classes.title} variant="h6">
           営業資料検索くん
         </Typography>

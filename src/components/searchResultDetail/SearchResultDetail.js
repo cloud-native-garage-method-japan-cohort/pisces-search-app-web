@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Paper,
+  Slide,
   Table,
   TableBody,
   TableCell,
@@ -34,6 +35,8 @@ const useStyles = makeStyles({
     fontWeight: "bold",
   },
 });
+
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const SearchResultDetail = (props) => {
   const classes = useStyles();
@@ -83,6 +86,7 @@ const SearchResultDetail = (props) => {
       open={props.result}
       onClose={props.onClose}
       maxWidth="sm"
+      TransitionComponent={Transition}
       fullWidth
     >
       {content}

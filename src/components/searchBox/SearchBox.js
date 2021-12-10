@@ -8,11 +8,11 @@ import {
   Tab,
   Tabs,
   TextField,
+  Typography,
   makeStyles,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { queryDiscovery } from "../../utils/index";
-import { SentimentDissatisfied } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   suggestions: {
     paddingTop: 10,
     margin: "auto",
-    width: "80%",
+    width: "70%",
   },
 }));
 
@@ -122,7 +122,7 @@ const SearchBox = (props) => {
         </Grid>
       </form>
       <div className={classes.suggestions}>
-        <span>関連ワード</span><br />
+        <Typography variant="subtitle2">関連ワード</Typography>
         {suggestions.map((suggestion) => (
           <Chip 
             size="small"
