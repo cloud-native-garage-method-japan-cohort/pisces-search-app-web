@@ -42,7 +42,7 @@ const SearchBox = (props) => {
   const [type, setType] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
 
-  const doSearch = useCallback(async () => {
+  const doSearch = async (type) => {
     props.onStart();
     const res = await queryDiscovery(sendText, type, 5);
 
@@ -56,18 +56,18 @@ const SearchBox = (props) => {
     setSuggestions([...Array.from(allSuggestions)]);
 
     props.onComplete(res.data);
-  }, [sendText, type, setSuggestions]);
+  };
   const onClickSearch = useCallback(async (event) => {
     event.preventDefault();
-    await doSearch();
-  }, [doSearch]);
+    await doSearch(type);
+  }, [type, doSearch]);
   const onSubmitForm = useCallback((event) => {
     onClickSearch(event);
   },[onClickSearch]);
   const onChangeType = useCallback(async (event, newType) => {
     setType(newType);
-    await doSearch();
-  },[setType, doSearch]);
+    await doSearch(newType);
+  },[type, setType, doSearch]);
   const onChangeSearchText = useCallback((event) => {
     setSendText(event.target.value);
   }, [setSendText]);
