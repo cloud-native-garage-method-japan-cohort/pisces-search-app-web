@@ -1,11 +1,30 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: pisces-search-app-web
+  name: pisces-search-app
 spec:
   serviceAccountName: tekton-triggers-sa
   triggers:
-    - bindings:
+    - name: pisces-search-app-web
+      interceptors:
+      - github:
+          eventTypes: ["push"]
+      - cel:
+          filter: "body.repository.name == 'pisces-search-app-web' && body.ref.split('/')[2] == 'master'"
+      bindings:
         - ref: pisces-search-app-web-pipeline-triggerbinding
       template:
         ref: pisces-search-app-web-pipeline-triggertemplate
+    - name: pisces-search-app-api
+      interceptors:
+      - github:
+          eventTypes: ["push"]
+      - cel:
+          filter: "body.repository.name == 'pisces-search-app-api' && body.ref.split('/')[2] == 'master'"
+      bindings:
+        - ref: pisces-search-app-api-pipeline-triggerbinding
+      template:
+        ref: pisces-search-app-api-pipeline-triggertemplate
+
+    
+
